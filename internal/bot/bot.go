@@ -10,6 +10,7 @@ import (
 
 type R2Bot struct {
 	session *discordgo.Session
+	devmode bool
 }
 
 func New(token string) (bot R2Bot, err error) {
@@ -28,9 +29,18 @@ func (bot *R2Bot) CloseSession() {
 	bot.session.Close()
 }
 
+func (bot *R2Bot) SetDevelopmentMode(mode bool) {
+	bot.devmode = mode
+}
+
 func (bot *R2Bot) RegisterInteractionCommands() {
 	for _, cmd := range commands.COMMANDS {
-		_, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guild.GUILD_GLOBAL, cmd.Information)
+		var guildTarget string = guild.GUILD_GLOBAL
+		if bot.devmode {
+			guildTarget = guild.GUILD_DEV
+		}
+
+		_, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guildTarget, cmd.Information)
 
 		if err != nil {
 			fmt.Errorf("ERR: Registering \"%v\" command", cmd.Information.Name)
@@ -40,7 +50,12 @@ func (bot *R2Bot) RegisterInteractionCommands() {
 }
 
 func (bot *R2Bot) DeregisterInteractionCommands() {
-	rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guild.GUILD_GLOBAL)
+	var guildTarget string = guild.GUILD_GLOBAL
+	if bot.devmode {
+		guildTarget = guild.GUILD_DEV
+	}
+
+	rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guildTarget)
 
 	if err != nil {
 		fmt.Errorf("ERR: Retrieving commands")
@@ -48,7 +63,7 @@ func (bot *R2Bot) DeregisterInteractionCommands() {
 	}
 
 	for _, cmd := range rcommands {
-		bot.session.ApplicationCommandDelete(bot.session.State.User.ID, cmd.ID, guild.GUILD_GLOBAL)
+		bot.session.ApplicationCommandDelete(bot.session.State.User.ID, cmd.ID, guildTarget)
 	}
 }
 
