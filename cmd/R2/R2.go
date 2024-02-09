@@ -2,44 +2,29 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 
-	"github.com/bwmarrin/discordgo"
+	R2 "R2/internal/bot"
 )
 
-const GUILD_GLOBAL string = ""
-
 func main() {
-	dg, err := discordgo.New("Bot " + "")
+	R2Bot, err := R2.New(os.Getenv("TOKEN"))
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
 
-	dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		fmt.Println(i.ApplicationCommandData().Name)
-	})
+	R2Bot.OpenSession()
+	R2Bot.RegisterInteractionCommands()
+	R2Bot.AddInteractionCommandHandler()
 
-	dg.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		if m.Author.ID == dg.State.User.ID {
-			return
-		}
-
-		dg.ChannelMessageSendReply(m.ChannelID, "Your message: " + m.Content, m.Reference())
-	})
-
-	err = dg.Open()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer dg.Close()
+	defer R2Bot.DeregisterInteractionCommands()
+	defer R2Bot.CloseSession()
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)
-	fmt.Println("Press Ctrl+C to exit")
+	fmt.Println("R2-BOT: Press CTRL + C to stop")
 	<-stop
 }
