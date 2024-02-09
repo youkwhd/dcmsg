@@ -1,8 +1,9 @@
 package commands
 
 import (
-	"fmt"
 	"strings"
+
+	"R2/internal/db"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -72,8 +73,9 @@ var /* const */ COMMANDS = [...]Command{
 			role := args["role"].Value.(string)
 			emoji := args["emoji"].Value.(string)
 
-			// UNUSED
-			fmt.Println(role)
+			// ?? what is this type rule, golang??
+			db.Messages[db.MessageID(messageID)] = db.NewRoleReactionMessage(channelID)
+			db.Messages[db.MessageID(messageID)].Reactions[db.Emoji(emoji)] = db.Role(role)
 
 			botSession.MessageReactionAdd(channelID, messageID, emoji)
 

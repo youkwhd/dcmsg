@@ -19,6 +19,7 @@ func main() {
 
 	R2Bot.OpenSession()
 	R2Bot.RegisterInteractionCommands()
+	R2Bot.AddMessageReactionHandler()
 	R2Bot.AddInteractionCommandHandler()
 
 	defer R2Bot.DeregisterInteractionCommands()

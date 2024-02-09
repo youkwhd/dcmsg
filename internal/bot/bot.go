@@ -2,6 +2,7 @@ package bot
 
 import (
 	"R2/internal/commands"
+	"R2/internal/db"
 	"R2/internal/guild"
 	"fmt"
 
@@ -78,5 +79,43 @@ func (bot *R2Bot) AddInteractionCommandHandler() {
 				cmd.Handler(botSession, i)
 			}
 		}
+	})
+}
+
+func (bot *R2Bot) AddMessageReactionHandler() {
+	bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionAdd) {
+		if r.UserID == bot.session.State.User.ID {
+			return
+		}
+
+		roleReactionMessage, found := db.Messages[db.MessageID(r.MessageID)]
+		if !found {
+			return
+		}
+
+		role, found := roleReactionMessage.Reactions[db.Emoji(r.Emoji.Name)]
+		if !found {
+			return
+		}
+
+		bot.session.GuildMemberRoleAdd(r.GuildID, r.UserID, string(role))
+	})
+
+	bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionRemove) {
+		if r.UserID == bot.session.State.User.ID {
+			return
+		}
+
+		roleReactionMessage, found := db.Messages[db.MessageID(r.MessageID)]
+		if !found {
+			return
+		}
+
+		role, found := roleReactionMessage.Reactions[db.Emoji(r.Emoji.Name)]
+		if !found {
+			return
+		}
+
+		bot.session.GuildMemberRoleRemove(r.GuildID, r.UserID, string(role))
 	})
 }
