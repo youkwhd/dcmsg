@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	R2Bot, err := R2.New(os.Getenv("TOKEN"))
+	R2Bot, err := R2.New(os.Getenv("R2TOK"))
 
 	if err != nil {
 		fmt.Println(err)
