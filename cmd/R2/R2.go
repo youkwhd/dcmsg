@@ -10,7 +10,7 @@ import (
 
 func main() {
 	R2Bot, err := R2.New(os.Getenv("R2TOK"))
-	R2Bot.SetDevelopmentMode(true)
+	R2Bot.SetDevelopmentMode(os.Getenv("R2DEV") == "1")
 
 	if err != nil {
 		fmt.Println(err)
