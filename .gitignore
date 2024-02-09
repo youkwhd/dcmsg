@@ -1,4 +1,6 @@
 *.exe
 R2
-
 !cmd/R2
+
+# Discord Token
+.R2TOK
