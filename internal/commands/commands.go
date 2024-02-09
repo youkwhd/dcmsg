@@ -1,7 +1,9 @@
 package commands
 
 import (
+	"fmt"
 	"strings"
+	"time"
 
 	"R2/internal/db"
 
@@ -79,13 +81,25 @@ var /* const */ COMMANDS = [...]Command{
 
 			botSession.MessageReactionAdd(channelID, messageID, emoji)
 
-			// TODO: Respond then delete it OR not respond at all
+			roles, _ := botSession.GuildRoles(i.GuildID)
+
+			// TODO: Golang really does not have a .Find() function
+			var R *discordgo.Role
+			for _, r := range roles {
+				if r.ID == role {
+					R = r
+				}
+			}
+
 			botSession.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Content: "OK",
+					Content: fmt.Sprintf("Registered (**@%s**)[%s]", R.Name, emoji),
 				},
 			})
+
+			time.Sleep(time.Second * 2)
+			botSession.InteractionResponseDelete(i.Interaction)
 		},
 	},
 }
