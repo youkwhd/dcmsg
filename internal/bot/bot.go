@@ -1,9 +1,9 @@
 package bot
 
 import (
-	"R2/internal/commands"
+	"R2/internal/bot/commands"
+	"R2/internal/bot/guild"
 	"R2/internal/db"
-	"R2/internal/guild"
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
