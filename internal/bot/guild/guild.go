@@ -1,6 +1,8 @@
 package guild
 
-const (
-	GUILD_GLOBAL string = ""
-	GUILD_DEV    string = "761823944328085534" // your server guild id
+import (
+	"os"
 )
+
+const GUILD_GLOBAL string = ""
+var GUILD_DEV string = os.Getenv("R2SRV")
