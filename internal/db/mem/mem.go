@@ -1,4 +1,4 @@
-package db
+package mem
 
 type MessageID string
 type Emoji string

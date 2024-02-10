@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"R2/internal/db"
+	db "R2/internal/db/mem"
 
 	"github.com/bwmarrin/discordgo"
 )

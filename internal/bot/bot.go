@@ -1,10 +1,11 @@
 package bot
 
 import (
+	"fmt"
+
 	"R2/internal/bot/commands"
 	"R2/internal/bot/guild"
-	"R2/internal/db"
-	"fmt"
+	db "R2/internal/db/mem"
 
 	"github.com/bwmarrin/discordgo"
 )
