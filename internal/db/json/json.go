@@ -32,5 +32,7 @@ func getMessages() map[message.MessageID]message.Message {
 }
 
 func GetMessage(messageID string) (message.Message, bool) {
-	return message.Message{}, false
+	messages := getMessages()
+	msg, found := messages[message.MessageID(messageID)]
+	return msg, found
 }
