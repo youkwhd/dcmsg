@@ -1,13 +1,14 @@
 package json
 
+// Might be a painfully slow I/O operation
+// but this is what we got for now.
+
 import (
 	"R2/internal/message"
 	"encoding/json"
 	"os"
 )
 
-// This might be a painfully slow I/O operation
-// but this is what we got for now.
 func SaveMessage(channelID string, messageID string, role string, emoji string) {
 	messages := getMessages()
 	msg, found := messages[message.MessageID(messageID)]

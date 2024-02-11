@@ -5,7 +5,7 @@ import (
 
 	"R2/internal/bot/commands"
 	"R2/internal/bot/guild"
-	db "R2/internal/db/mem"
+	db "R2/internal/db/json"
 	"R2/internal/message"
 
 	"github.com/bwmarrin/discordgo"

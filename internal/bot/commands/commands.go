@@ -3,7 +3,7 @@ package commands
 import (
 	"strings"
 
-	db "R2/internal/db/mem"
+	db "R2/internal/db/json"
 
 	"github.com/bwmarrin/discordgo"
 )
