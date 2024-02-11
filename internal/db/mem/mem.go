@@ -7,8 +7,13 @@ import (
 var Messages = make(map[message.MessageID]message.Message)
 
 func SaveMessage(channelID string, messageID string, role string, emoji string) {
-	Messages[message.MessageID(messageID)] = message.NewMessage(channelID)
-	Messages[message.MessageID(messageID)].Reactions[message.Emoji(emoji)] = message.Role(role)
+	msg, found := Messages[message.MessageID(messageID)]
+	if !found {
+		msg = message.NewMessage(channelID)
+	}
+
+	msg.AddReaction(emoji, role)
+	Messages[message.MessageID(messageID)] = msg
 }
 
 func GetMessage(messageID string) (message.Message, bool) {
