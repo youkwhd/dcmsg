@@ -12,7 +12,7 @@ func main() {
 	R2Bot, err := R2.New(os.Getenv("R2TOK"))
 
 	if err != nil {
-		fmt.Println("ERR:", err)
+		fmt.Println("R2-ERR:", err)
 		os.Exit(1)
 	}
 
