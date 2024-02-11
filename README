@@ -1,4 +1,30 @@
-R2
-==
+R2 - Reaction Role
+==================
 
-Discord bot for managing reaction roles
+Discord bot for managing reaction roles.
+
+R2 is still on the early development stage, this means there
+would be breaking changes in further updates.
+
+Quick Start
+-----------
+
+This blindly assumes that you already have Go installed.
+
+Specify your discord bot token:
+
+    echo "YOUR-DISCORD-BOT-TOKEN" > .R2TOK
+
+There is no support for OTP Tokens at the moment.
+
+You can go to https://discord.com/developers/applications in
+order to create a new discord application (bot).
+
+Specify your development server ID (optional):
+
+    echo "YOUR-GUILD-SERVER-ID" > .R2SRV
+
+After completing the above instructions, you can run the bot via
+a shell script:
+
+    ./run.sh
