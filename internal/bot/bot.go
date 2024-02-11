@@ -6,6 +6,7 @@ import (
 	"R2/internal/bot/commands"
 	"R2/internal/bot/guild"
 	db "R2/internal/db/mem"
+	"R2/internal/message"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -89,12 +90,12 @@ func (bot *R2Bot) AddMessageReactionHandler() {
 			return
 		}
 
-		roleReactionMessage, found := db.Messages[db.MessageID(r.MessageID)]
+		roleReactionMessage, found := db.GetMessage(r.MessageID)
 		if !found {
 			return
 		}
 
-		role, found := roleReactionMessage.Reactions[db.Emoji(r.Emoji.Name)]
+		role, found := roleReactionMessage.Reactions[message.Emoji(r.Emoji.Name)]
 		if !found {
 			return
 		}
@@ -107,12 +108,12 @@ func (bot *R2Bot) AddMessageReactionHandler() {
 			return
 		}
 
-		roleReactionMessage, found := db.Messages[db.MessageID(r.MessageID)]
+		roleReactionMessage, found := db.GetMessage(r.MessageID)
 		if !found {
 			return
 		}
 
-		role, found := roleReactionMessage.Reactions[db.Emoji(r.Emoji.Name)]
+		role, found := roleReactionMessage.Reactions[message.Emoji(r.Emoji.Name)]
 		if !found {
 			return
 		}

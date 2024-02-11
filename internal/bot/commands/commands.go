@@ -1,9 +1,7 @@
 package commands
 
 import (
-	"fmt"
 	"strings"
-	"time"
 
 	db "R2/internal/db/mem"
 
@@ -75,30 +73,16 @@ var /* const */ COMMANDS = [...]Command{
 			role := args["role"].Value.(string)
 			emoji := args["emoji"].Value.(string)
 
-			// ?? what is this type rule, golang??
-			db.Messages[db.MessageID(messageID)] = db.NewRoleReactionMessage(channelID)
-			db.Messages[db.MessageID(messageID)].Reactions[db.Emoji(emoji)] = db.Role(role)
-
+			db.SaveMessage(channelID, messageID, role, emoji)
 			botSession.MessageReactionAdd(channelID, messageID, emoji)
-
-			roles, _ := botSession.GuildRoles(i.GuildID)
-
-			// TODO: Golang really does not have a .Find() function
-			var R *discordgo.Role
-			for _, r := range roles {
-				if r.ID == role {
-					R = r
-				}
-			}
 
 			botSession.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Content: fmt.Sprintf("Registered (**@%s**)[%s]", R.Name, emoji),
+					Content: "OK",
 				},
 			})
 
-			time.Sleep(time.Second * 2)
 			botSession.InteractionResponseDelete(i.Interaction)
 		},
 	},

@@ -1,19 +1,17 @@
 package mem
 
-type MessageID string
-type Emoji string
-type Role string
+import (
+	"R2/internal/message"
+)
 
-type RoleReactionMessage struct {
-	ChannelID string
-	Reactions map[Emoji]Role
+var Messages = make(map[message.MessageID]message.Message)
+
+func SaveMessage(channelID string, messageID string, role string, emoji string) {
+	Messages[message.MessageID(messageID)] = message.NewMessage(channelID)
+	Messages[message.MessageID(messageID)].Reactions[message.Emoji(emoji)] = message.Role(role)
 }
 
-func NewRoleReactionMessage(channelID string) RoleReactionMessage {
-	return RoleReactionMessage{
-		ChannelID: channelID,
-		Reactions: make(map[Emoji]Role),
-	}
+func GetMessage(messageID string) (message.Message, bool) {
+	msg, found := Messages[message.MessageID(messageID)]
+	return msg, found
 }
-
-var Messages = make(map[MessageID]RoleReactionMessage)
