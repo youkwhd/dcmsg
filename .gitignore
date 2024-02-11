@@ -2,6 +2,8 @@
 R2
 !cmd/R2
 
+data/
+
 # Discord Token
 .R2TOK
 
