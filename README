@@ -28,3 +28,12 @@ After completing the above instructions, you can run the bot via
 a shell script:
 
     ./run.sh
+
+Database
+--------
+
+SQLite3 is the only great candidate option for an SQL database.
+
+How to wipe the data/db.json file data? just empty the file:
+
+    echo -n > data/db.json
