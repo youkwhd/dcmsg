@@ -37,3 +37,10 @@ SQLite3 is the only great candidate option for an SQL database.
 How to wipe the data/db.json data? just empty the file:
 
     echo -n > data/db.json
+
+
+TODOs
+-----
+
+- Threading
+- Maybe use SQLite3
