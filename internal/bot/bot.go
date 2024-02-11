@@ -79,6 +79,7 @@ func (bot *R2Bot) AddInteractionCommandHandler() {
 		for _, cmd := range commands.COMMANDS {
 			if interactionName == cmd.Information.Name {
 				cmd.Handler(botSession, i)
+				break
 			}
 		}
 	})
