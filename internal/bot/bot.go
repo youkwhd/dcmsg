@@ -19,6 +19,11 @@ type R2Bot struct {
 func New(token string) (bot R2Bot, err error) {
 	session, err := discordgo.New("Bot " + token)
 
+	// TODO: check for " " empty space
+	if token == "" {
+		err = fmt.Errorf("bot token cannot be empty")
+	}
+
 	return R2Bot{
 		session: session,
 	}, err
