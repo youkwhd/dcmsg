@@ -25,6 +25,7 @@ func SaveMessage(channelID string, messageID string, role string, emoji string) 
     os.WriteFile("data/db.json", bytes, 0666)
 }
 
+// TODO: Cachable, maybe don't write it just yet
 func getMessages() map[message.MessageID]message.Message {
     bytes, _ := os.ReadFile("data/db.json")
 
