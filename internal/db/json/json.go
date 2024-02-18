@@ -4,20 +4,20 @@ package json
 // but this is what we got for now.
 
 import (
-	"R2/internal/message"
-	"encoding/json"
-	"os"
+    "R2/internal/message"
+    "encoding/json"
+    "os"
 )
 
 func SaveMessage(channelID string, messageID string, role string, emoji string) {
-	messages := getMessages()
-	msg, found := messages[message.MessageID(messageID)]
-	if !found {
-		msg = message.NewMessage(channelID)
-	}
+    messages := getMessages()
+    msg, found := messages[message.MessageID(messageID)]
+    if !found {
+        msg = message.NewMessage(channelID)
+    }
 
-	msg.AddReaction(emoji, role)
-	messages[message.MessageID(messageID)] = msg
+    msg.AddReaction(emoji, role)
+    messages[message.MessageID(messageID)] = msg
 
     bytes, _ := json.Marshal(messages)
 
@@ -26,16 +26,16 @@ func SaveMessage(channelID string, messageID string, role string, emoji string) 
 }
 
 func getMessages() map[message.MessageID]message.Message {
-	bytes, _ := os.ReadFile("data/db.json")
+    bytes, _ := os.ReadFile("data/db.json")
 
-	messages := make(map[message.MessageID]message.Message)
-	json.Unmarshal(bytes, &messages)
+    messages := make(map[message.MessageID]message.Message)
+    json.Unmarshal(bytes, &messages)
 
-	return messages
+    return messages
 }
 
 func GetMessage(messageID string) (message.Message, bool) {
-	messages := getMessages()
-	msg, found := messages[message.MessageID(messageID)]
-	return msg, found
+    messages := getMessages()
+    msg, found := messages[message.MessageID(messageID)]
+    return msg, found
 }

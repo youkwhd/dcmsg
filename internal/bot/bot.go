@@ -1,129 +1,129 @@
 package bot
 
 import (
-	"fmt"
+    "fmt"
 
-	"R2/internal/bot/commands"
-	"R2/internal/bot/guild"
-	db "R2/internal/db/json"
-	"R2/internal/message"
+    "R2/internal/bot/commands"
+    "R2/internal/bot/guild"
+    db "R2/internal/db/json"
+    "R2/internal/message"
 
-	"github.com/bwmarrin/discordgo"
+    "github.com/bwmarrin/discordgo"
 )
 
 type R2Bot struct {
-	session *discordgo.Session
-	devmode bool
+    session *discordgo.Session
+    devmode bool
 }
 
 func New(token string) (bot R2Bot, err error) {
-	session, err := discordgo.New("Bot " + token)
+    session, err := discordgo.New("Bot " + token)
 
-	// TODO: check for " " empty space
-	if token == "" {
-		err = fmt.Errorf("bot token cannot be empty")
-	}
+    // TODO: check for " " empty space
+    if token == "" {
+        err = fmt.Errorf("bot token cannot be empty")
+    }
 
-	return R2Bot{
-		session: session,
-	}, err
+    return R2Bot{
+        session: session,
+    }, err
 }
 
 func (bot *R2Bot) OpenSession() {
-	bot.session.Open()
+    bot.session.Open()
 }
 
 func (bot *R2Bot) CloseSession() {
-	bot.session.Close()
+    bot.session.Close()
 }
 
 func (bot *R2Bot) SetDevelopmentMode(mode bool) {
-	bot.devmode = mode
+    bot.devmode = mode
 }
 
 func (bot *R2Bot) RegisterInteractionCommands() {
-	for _, cmd := range commands.COMMANDS {
-		var guildTarget string = guild.GUILD_GLOBAL
-		if bot.devmode {
-			guildTarget = guild.GUILD_DEV
-		}
+    for _, cmd := range commands.COMMANDS {
+        var guildTarget string = guild.GUILD_GLOBAL
+        if bot.devmode {
+            guildTarget = guild.GUILD_DEV
+        }
 
-		_, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guildTarget, cmd.Information)
+        _, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guildTarget, cmd.Information)
 
-		if err != nil {
-			fmt.Errorf("ERR: Registering \"%v\" command", cmd.Information.Name)
-		}
-	}
+        if err != nil {
+            fmt.Errorf("ERR: Registering \"%v\" command", cmd.Information.Name)
+        }
+    }
 
 }
 
 func (bot *R2Bot) DeregisterInteractionCommands() {
-	var guildTarget string = guild.GUILD_GLOBAL
-	if bot.devmode {
-		guildTarget = guild.GUILD_DEV
-	}
+    var guildTarget string = guild.GUILD_GLOBAL
+    if bot.devmode {
+        guildTarget = guild.GUILD_DEV
+    }
 
-	rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guildTarget)
+    rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guildTarget)
 
-	if err != nil {
-		fmt.Errorf("ERR: Retrieving commands")
-		return
-	}
+    if err != nil {
+        fmt.Errorf("ERR: Retrieving commands")
+        return
+    }
 
-	for _, cmd := range rcommands {
-		bot.session.ApplicationCommandDelete(bot.session.State.User.ID, cmd.ID, guildTarget)
-	}
+    for _, cmd := range rcommands {
+        bot.session.ApplicationCommandDelete(bot.session.State.User.ID, cmd.ID, guildTarget)
+    }
 }
 
 func (bot *R2Bot) AddInteractionCommandHandler() {
-	bot.session.AddHandler(func(botSession *discordgo.Session, i *discordgo.InteractionCreate) {
-		data := i.ApplicationCommandData()
-		interactionName := data.Name
+    bot.session.AddHandler(func(botSession *discordgo.Session, i *discordgo.InteractionCreate) {
+        data := i.ApplicationCommandData()
+        interactionName := data.Name
 
-		// TODO: maybe consider using hashmap
-		for _, cmd := range commands.COMMANDS {
-			if interactionName == cmd.Information.Name {
-				cmd.Handler(botSession, i)
-				break
-			}
-		}
-	})
+        // TODO: maybe consider using hashmap
+        for _, cmd := range commands.COMMANDS {
+            if interactionName == cmd.Information.Name {
+                cmd.Handler(botSession, i)
+                break
+            }
+        }
+    })
 }
 
 func (bot *R2Bot) AddMessageReactionHandler() {
-	bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionAdd) {
-		if r.UserID == bot.session.State.User.ID {
-			return
-		}
+    bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionAdd) {
+        if r.UserID == bot.session.State.User.ID {
+            return
+        }
 
-		roleReactionMessage, found := db.GetMessage(r.MessageID)
-		if !found {
-			return
-		}
+        roleReactionMessage, found := db.GetMessage(r.MessageID)
+        if !found {
+            return
+        }
 
-		role, found := roleReactionMessage.Reactions[message.Emoji(r.Emoji.Name)]
-		if !found {
-			return
-		}
+        role, found := roleReactionMessage.Reactions[message.Emoji(r.Emoji.Name)]
+        if !found {
+            return
+        }
 
-		bot.session.GuildMemberRoleAdd(r.GuildID, r.UserID, string(role))
-	})
+        bot.session.GuildMemberRoleAdd(r.GuildID, r.UserID, string(role))
+    })
 
-	bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionRemove) {
-		if r.UserID == bot.session.State.User.ID {
-			return
-		}
+    bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionRemove) {
+        if r.UserID == bot.session.State.User.ID {
+            return
+        }
 
-		roleReactionMessage, found := db.GetMessage(r.MessageID)
-		if !found {
-			return
-		}
+        roleReactionMessage, found := db.GetMessage(r.MessageID)
+        if !found {
+            return
+        }
 
-		role, found := roleReactionMessage.Reactions[message.Emoji(r.Emoji.Name)]
-		if !found {
-			return
-		}
+        role, found := roleReactionMessage.Reactions[message.Emoji(r.Emoji.Name)]
+        if !found {
+            return
+        }
 
-		bot.session.GuildMemberRoleRemove(r.GuildID, r.UserID, string(role))
-	})
+        bot.session.GuildMemberRoleRemove(r.GuildID, r.UserID, string(role))
+    })
 }

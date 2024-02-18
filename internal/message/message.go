@@ -7,17 +7,17 @@ type Emoji string
 type Role string
 
 type Message struct {
-	ChannelID string 			`json:"channel_id"`
-	Reactions map[Emoji]Role 	`json:"reactions"`
+    ChannelID string             `json:"channel_id"`
+    Reactions map[Emoji]Role     `json:"reactions"`
 }
 
 func NewMessage(channelID string) Message {
-	return Message{
-		ChannelID: channelID,
-		Reactions: make(map[Emoji]Role),
-	}
+    return Message{
+        ChannelID: channelID,
+        Reactions: make(map[Emoji]Role),
+    }
 }
 
 func (msg *Message) AddReaction(emoji string, role string) {
-	msg.Reactions[Emoji(emoji)] = Role(role)
+    msg.Reactions[Emoji(emoji)] = Role(role)
 }

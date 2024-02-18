@@ -1,7 +1,7 @@
 package guild
 
 import (
-	"os"
+    "os"
 )
 
 const GUILD_GLOBAL string = ""
