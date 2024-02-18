@@ -1,14 +1,15 @@
 package bot
 
 import (
-    "fmt"
+	"fmt"
+	"strings"
 
-    "R2/internal/bot/commands"
-    "R2/internal/bot/guild"
-    db "R2/internal/db/json"
-    "R2/internal/message"
+	"R2/internal/bot/commands"
+	"R2/internal/bot/guild"
+	db "R2/internal/db/json"
+	"R2/internal/message"
 
-    "github.com/bwmarrin/discordgo"
+	"github.com/bwmarrin/discordgo"
 )
 
 type R2Bot struct {
@@ -17,12 +18,12 @@ type R2Bot struct {
 }
 
 func New(token string) (bot R2Bot, err error) {
-    session, err := discordgo.New("Bot " + token)
-
-    // TODO: check for " " empty space
+    token = strings.Trim(token, " ")
     if token == "" {
         err = fmt.Errorf("bot token cannot be empty")
     }
+
+    session, err := discordgo.New("Bot " + token)
 
     return R2Bot{
         session: session,
@@ -51,10 +52,9 @@ func (bot *R2Bot) RegisterInteractionCommands() {
         _, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guildTarget, cmd.Information)
 
         if err != nil {
-            fmt.Errorf("ERR: Registering \"%v\" command", cmd.Information.Name)
+            fmt.Printf("ERR: Registering \"%v\" command\n", cmd.Information.Name)
         }
     }
-
 }
 
 func (bot *R2Bot) DeregisterInteractionCommands() {
@@ -66,7 +66,7 @@ func (bot *R2Bot) DeregisterInteractionCommands() {
     rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guildTarget)
 
     if err != nil {
-        fmt.Errorf("ERR: Retrieving commands")
+        fmt.Printf("ERR: Retrieving commands\n")
         return
     }
 
