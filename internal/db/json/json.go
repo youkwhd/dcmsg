@@ -20,7 +20,9 @@ func SaveMessage(channelID string, messageID string, role string, emoji string) 
 	messages[message.MessageID(messageID)] = msg
 
     bytes, _ := json.Marshal(messages)
-	os.WriteFile("data/db.json", bytes, 0666)
+
+    os.Mkdir("data", os.ModePerm)
+    os.WriteFile("data/db.json", bytes, 0666)
 }
 
 func getMessages() map[message.MessageID]message.Message {
