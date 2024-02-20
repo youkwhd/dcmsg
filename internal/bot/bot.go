@@ -44,12 +44,7 @@ func (bot *R2Bot) SetDevelopmentMode(mode bool) {
 
 func (bot *R2Bot) RegisterInteractionCommands() {
     for _, cmd := range commands.COMMANDS {
-        var guildTarget string = guild.GUILD_GLOBAL
-        if bot.devmode {
-            guildTarget = guild.GUILD_DEV
-        }
-
-        _, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guildTarget, cmd.Information)
+        _, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guild.GetGuild(bot.devmode), cmd.Information)
 
         if err != nil {
             fmt.Printf("ERR: Registering \"%v\" command\n", cmd.Information.Name)
@@ -58,12 +53,7 @@ func (bot *R2Bot) RegisterInteractionCommands() {
 }
 
 func (bot *R2Bot) DeregisterInteractionCommands() {
-    var guildTarget string = guild.GUILD_GLOBAL
-    if bot.devmode {
-        guildTarget = guild.GUILD_DEV
-    }
-
-    rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guildTarget)
+    rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guild.GetGuild(bot.devmode))
 
     if err != nil {
         fmt.Printf("ERR: Retrieving commands\n")
@@ -71,7 +61,7 @@ func (bot *R2Bot) DeregisterInteractionCommands() {
     }
 
     for _, cmd := range rcommands {
-        bot.session.ApplicationCommandDelete(bot.session.State.User.ID, cmd.ID, guildTarget)
+        bot.session.ApplicationCommandDelete(bot.session.State.User.ID, cmd.ID, guild.GetGuild(bot.devmode))
     }
 }
 
