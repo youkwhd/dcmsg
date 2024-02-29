@@ -1,15 +1,15 @@
 package bot
 
 import (
-	"fmt"
-	"strings"
+    "fmt"
+    "strings"
 
-	"R2/internal/bot/commands"
-	"R2/internal/bot/guild"
-	db "R2/internal/db/json"
-	"R2/internal/message"
+    "R2/internal/bot/commands"
+    "R2/internal/bot/guild"
+    db "R2/internal/db/json"
+    "R2/internal/message"
 
-	"github.com/bwmarrin/discordgo"
+    "github.com/bwmarrin/discordgo"
 )
 
 type R2Bot struct {
@@ -20,7 +20,7 @@ type R2Bot struct {
 func New(token string) (bot R2Bot, err error) {
     token = strings.Trim(token, " ")
     if token == "" {
-		return R2Bot{}, fmt.Errorf("bot token cannot be empty")
+        return R2Bot{}, fmt.Errorf("bot token cannot be empty")
     }
 
     session, err := discordgo.New("Bot " + token)
