@@ -116,4 +116,8 @@ func (bot *R2Bot) AddMessageReactionHandler() {
 
         bot.session.GuildMemberRoleRemove(r.GuildID, r.UserID, string(role))
     })
+
+    bot.session.AddHandler(func(botSession *discordgo.Session, m *discordgo.MessageDelete) {
+        db.RemoveMessage(m.ID)
+    })
 }

@@ -20,3 +20,17 @@ func GetMessage(messageID string) (message.Message, bool) {
     msg, found := Messages[message.MessageID(messageID)]
     return msg, found
 }
+
+func GetAllMessages() map[message.MessageID]message.Message {
+    return Messages
+}
+
+// Removes the message if found
+func RemoveMessage(messageID string) {
+    _, found := Messages[message.MessageID(messageID)]
+    if !found {
+        return;
+    }
+
+    delete(Messages, message.MessageID(messageID))
+}

@@ -10,7 +10,7 @@ import (
 )
 
 func SaveMessage(channelID string, messageID string, role string, emoji string) {
-    messages := getMessages()
+    messages := GetAllMessages()
     msg, found := messages[message.MessageID(messageID)]
     if !found {
         msg = message.NewMessage(channelID)
@@ -25,8 +25,14 @@ func SaveMessage(channelID string, messageID string, role string, emoji string) 
     os.WriteFile("data/db.json", bytes, 0666)
 }
 
+func GetMessage(messageID string) (message.Message, bool) {
+    messages := GetAllMessages()
+    msg, found := messages[message.MessageID(messageID)]
+    return msg, found
+}
+
 // TODO: Cachable, maybe don't write it just yet
-func getMessages() map[message.MessageID]message.Message {
+func GetAllMessages() map[message.MessageID]message.Message {
     bytes, _ := os.ReadFile("data/db.json")
 
     messages := make(map[message.MessageID]message.Message)
@@ -35,8 +41,22 @@ func getMessages() map[message.MessageID]message.Message {
     return messages
 }
 
-func GetMessage(messageID string) (message.Message, bool) {
-    messages := getMessages()
-    msg, found := messages[message.MessageID(messageID)]
-    return msg, found
+func replaceJsonData(messages map[message.MessageID]message.Message) {
+    bytes, _ := json.Marshal(messages)
+
+    os.Mkdir("data", os.ModePerm)
+    os.WriteFile("data/db.json", bytes, 0666)
+}
+
+// Removes the message if found
+func RemoveMessage(messageID string) {
+    messages := GetAllMessages()
+
+    _, found := messages[message.MessageID(messageID)]
+    if !found {
+        return;
+    }
+
+    delete(messages, message.MessageID(messageID));
+    replaceJsonData(messages)
 }
