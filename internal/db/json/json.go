@@ -9,6 +9,13 @@ import (
     "os"
 )
 
+func writeData(messages map[message.MessageID]message.Message) {
+    bytes, _ := json.Marshal(messages)
+
+    os.Mkdir("data", os.ModePerm)
+    os.WriteFile("data/db.json", bytes, 0666)
+}
+
 func SaveMessage(channelID string, messageID string, role string, emoji string) {
     messages := GetAllMessages()
     msg, found := messages[message.MessageID(messageID)]
@@ -19,10 +26,7 @@ func SaveMessage(channelID string, messageID string, role string, emoji string) 
     msg.AddReaction(emoji, role)
     messages[message.MessageID(messageID)] = msg
 
-    bytes, _ := json.Marshal(messages)
-
-    os.Mkdir("data", os.ModePerm)
-    os.WriteFile("data/db.json", bytes, 0666)
+    writeData(messages)
 }
 
 func GetMessage(messageID string) (message.Message, bool) {
@@ -41,13 +45,6 @@ func GetAllMessages() map[message.MessageID]message.Message {
     return messages
 }
 
-func replaceJsonData(messages map[message.MessageID]message.Message) {
-    bytes, _ := json.Marshal(messages)
-
-    os.Mkdir("data", os.ModePerm)
-    os.WriteFile("data/db.json", bytes, 0666)
-}
-
 // Removes the message if found
 func RemoveMessage(messageID string) {
     messages := GetAllMessages()
@@ -58,5 +55,5 @@ func RemoveMessage(messageID string) {
     }
 
     delete(messages, message.MessageID(messageID));
-    replaceJsonData(messages)
+    writeData(messages)
 }
