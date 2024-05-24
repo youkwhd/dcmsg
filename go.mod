@@ -2,7 +2,7 @@ module R2
 
 go 1.19
 
-require github.com/bwmarrin/discordgo v0.27.2-0.20240202235938-7f80bc797881
+require github.com/bwmarrin/discordgo v0.28.1
 
 require (
 	github.com/gorilla/websocket v1.4.2 // indirect

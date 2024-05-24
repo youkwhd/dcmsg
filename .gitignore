@@ -4,6 +4,9 @@ R2
 
 data/
 
+# Discord Application ID
+.R2AID
+
 # Discord Token
 .R2TOK
 

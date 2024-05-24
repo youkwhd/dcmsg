@@ -19,11 +19,10 @@ func main() {
     R2Bot.SetDevelopmentMode(os.Getenv("R2DEV") == "1")
 
     R2Bot.OpenSession()
-    R2Bot.RegisterInteractionCommands()
+    R2Bot.RegisterCommands(os.Getenv("R2AID"), "")
     R2Bot.AddMessageReactionHandler()
-    R2Bot.AddInteractionCommandHandler()
+    R2Bot.AddCommandHandler()
 
-    defer R2Bot.DeregisterInteractionCommands()
     defer R2Bot.CloseSession()
 
     stop := make(chan os.Signal, 1)

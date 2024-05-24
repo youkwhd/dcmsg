@@ -1,15 +1,14 @@
 package bot
 
 import (
-    "fmt"
-    "strings"
+	"fmt"
+	"strings"
 
-    "R2/internal/bot/commands"
-    "R2/internal/bot/guild"
-    db "R2/internal/db/json"
-    "R2/internal/message"
+	"R2/internal/bot/commands"
+	db "R2/internal/db/json"
+	"R2/internal/message"
 
-    "github.com/bwmarrin/discordgo"
+	"github.com/bwmarrin/discordgo"
 )
 
 type R2Bot struct {
@@ -42,30 +41,21 @@ func (bot *R2Bot) SetDevelopmentMode(mode bool) {
     bot.devmode = mode
 }
 
-func (bot *R2Bot) RegisterInteractionCommands() {
+func (bot *R2Bot) RegisterCommands(appId, guildId string) {
+	bot.session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+		fmt.Printf("Logged in as: %v#%v", s.State.User.Username, s.State.User.Discriminator)
+	})
+
     for _, cmd := range commands.COMMANDS {
-        _, err := bot.session.ApplicationCommandCreate(bot.session.State.User.ID, guild.GetGuild(bot.devmode), cmd.Information)
-
-        if err != nil {
-            fmt.Printf("ERR: Registering \"%v\" command\n", cmd.Information.Name)
-        }
+		_, err := bot.session.ApplicationCommandCreate(appId, guildId, cmd.Information)
+		if err != nil {
+			fmt.Printf("ERR: Registering command '%s'\n", cmd.Information.Name)
+			// TODO: exit here
+		}
     }
 }
 
-func (bot *R2Bot) DeregisterInteractionCommands() {
-    rcommands, err := bot.session.ApplicationCommands(bot.session.State.User.ID, guild.GetGuild(bot.devmode))
-
-    if err != nil {
-        fmt.Printf("ERR: Retrieving commands\n")
-        return
-    }
-
-    for _, cmd := range rcommands {
-        bot.session.ApplicationCommandDelete(bot.session.State.User.ID, cmd.ID, guild.GetGuild(bot.devmode))
-    }
-}
-
-func (bot *R2Bot) AddInteractionCommandHandler() {
+func (bot *R2Bot) AddCommandHandler() {
     bot.session.AddHandler(func(botSession *discordgo.Session, i *discordgo.InteractionCreate) {
         data := i.ApplicationCommandData()
         interactionName := data.Name
