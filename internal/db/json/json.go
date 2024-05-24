@@ -4,7 +4,7 @@ package json
 // but this is what we got for now.
 
 import (
-    "R2/internal/message"
+    "rrolls/internal/message"
     "encoding/json"
     "os"
 )

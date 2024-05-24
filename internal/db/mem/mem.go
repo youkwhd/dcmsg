@@ -1,7 +1,7 @@
 package mem
 
 import (
-    "R2/internal/message"
+    "rrolls/internal/message"
 )
 
 var Messages = make(map[message.MessageID]message.Message)

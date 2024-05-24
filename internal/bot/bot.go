@@ -1,53 +1,49 @@
-package bot
+package r2
 
 import (
 	"fmt"
 	"strings"
 
-	"R2/internal/bot/commands"
-	db "R2/internal/db/json"
-	"R2/internal/message"
+	"rrolls/internal/bot/commands"
+	db "rrolls/internal/db/json"
+	"rrolls/internal/message"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-type R2Bot struct {
+type rrolls struct {
     session *discordgo.Session
     devmode bool
 }
 
-func New(token string) (bot R2Bot, err error) {
+func New(token string) (r2 rrolls, err error) {
     token = strings.Trim(token, " ")
     if token == "" {
-        return R2Bot{}, fmt.Errorf("bot token cannot be empty")
+        return rrolls{}, fmt.Errorf("bot token cannot be empty")
     }
 
     session, err := discordgo.New("Bot " + token)
 
-    return R2Bot{
+    return rrolls{
         session: session,
     }, err
 }
 
-func (bot *R2Bot) OpenSession() {
-    bot.session.Open()
+func (r2 *rrolls) OpenSession() {
+    r2.session.Open()
 }
 
-func (bot *R2Bot) CloseSession() {
-    bot.session.Close()
+func (r2 *rrolls) CloseSession() {
+    r2.session.Close()
 }
 
-func (bot *R2Bot) SetDevelopmentMode(mode bool) {
-    bot.devmode = mode
+func (r2 *rrolls) SetDevelopmentMode(mode bool) {
+    r2.devmode = mode
 }
 
-func (bot *R2Bot) RegisterCommands(appId, guildId string) {
-	bot.session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		fmt.Printf("Logged in as: %v#%v", s.State.User.Username, s.State.User.Discriminator)
-	})
-
+func (r2 *rrolls) RegisterCommands(appId, guildId string) {
     for _, cmd := range commands.COMMANDS {
-		_, err := bot.session.ApplicationCommandCreate(appId, guildId, cmd.Information)
+		_, err := r2.session.ApplicationCommandCreate(appId, guildId, cmd.Information)
 		if err != nil {
 			fmt.Printf("ERR: Registering command '%s'\n", cmd.Information.Name)
 			// TODO: exit here
@@ -55,8 +51,8 @@ func (bot *R2Bot) RegisterCommands(appId, guildId string) {
     }
 }
 
-func (bot *R2Bot) AddCommandHandler() {
-    bot.session.AddHandler(func(botSession *discordgo.Session, i *discordgo.InteractionCreate) {
+func (r2 *rrolls) AddCommandHandler() {
+    r2.session.AddHandler(func(botSession *discordgo.Session, i *discordgo.InteractionCreate) {
         data := i.ApplicationCommandData()
         interactionName := data.Name
 
@@ -70,9 +66,9 @@ func (bot *R2Bot) AddCommandHandler() {
     })
 }
 
-func (bot *R2Bot) AddMessageReactionHandler() {
-    bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionAdd) {
-        if r.UserID == bot.session.State.User.ID {
+func (r2 *rrolls) AddMessageReactionHandler() {
+    r2.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionAdd) {
+        if r.UserID == r2.session.State.User.ID {
             return
         }
 
@@ -86,11 +82,11 @@ func (bot *R2Bot) AddMessageReactionHandler() {
             return
         }
 
-        bot.session.GuildMemberRoleAdd(r.GuildID, r.UserID, string(role))
+        r2.session.GuildMemberRoleAdd(r.GuildID, r.UserID, string(role))
     })
 
-    bot.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionRemove) {
-        if r.UserID == bot.session.State.User.ID {
+    r2.session.AddHandler(func(botSession *discordgo.Session, r *discordgo.MessageReactionRemove) {
+        if r.UserID == r2.session.State.User.ID {
             return
         }
 
@@ -104,10 +100,10 @@ func (bot *R2Bot) AddMessageReactionHandler() {
             return
         }
 
-        bot.session.GuildMemberRoleRemove(r.GuildID, r.UserID, string(role))
+        r2.session.GuildMemberRoleRemove(r.GuildID, r.UserID, string(role))
     })
 
-    bot.session.AddHandler(func(botSession *discordgo.Session, m *discordgo.MessageDelete) {
+    r2.session.AddHandler(func(botSession *discordgo.Session, m *discordgo.MessageDelete) {
         db.RemoveMessage(m.ID)
     })
 }

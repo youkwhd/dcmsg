@@ -1,5 +1,5 @@
-R2 - Reaction Role
-==================
+Reaction Rolls (R2)
+===================
 
 Discord bot for managing reaction roles.
 
@@ -20,6 +20,10 @@ There is no support for OTP Tokens at the moment.
 You can go to https://discord.com/developers/applications in
 order to create a new discord application (bot).
 
+Specify your discord bot/app id:
+
+    echo "YOUR-DISCORD-APP-ID" > .R2AID
+
 Specify your development server ID (optional):
 
     echo "YOUR-GUILD-SERVER-ID" > .R2SRV
@@ -27,7 +31,7 @@ Specify your development server ID (optional):
 After completing the above instructions, you can run the bot via
 a shell script:
 
-    ./run.sh
+    ./rrolls
 
 Database
 --------
