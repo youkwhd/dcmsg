@@ -9,6 +9,13 @@ would be breaking changes in further updates.
 Quick Start
 -----------
 
+After inviting the bot into your server, move the role
+'Reaction Rolls' to the top so that R2 can manage other roles
+below it.
+
+Installation
+------------
+
 This blindly assumes that you already have Go installed.
 
 Specify your discord bot token:
