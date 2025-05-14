@@ -23,6 +23,7 @@ func main() {
 
 	channel := os.Getenv("CHANNEL")
 	if channel == "" {
+		fmt.Print("channel> ")
 		channel, err = reader.ReadString('\n')
 
 		if err != nil {
@@ -35,7 +36,6 @@ func main() {
 
 	for {
 		fmt.Print("> ")
-
 		msg, err := reader.ReadString('\n')
 
 		if err != nil {
