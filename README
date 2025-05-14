@@ -1,17 +1,7 @@
-Reaction Rolls (R2)
-===================
+dcmsg
+=====
 
-Discord bot for managing reaction roles.
-
-R2 is still on the early development stage, this means there
-would be breaking changes in further updates.
-
-Quick Start
------------
-
-After inviting the bot into your server, move the role
-'Reaction Rolls' to the top so that R2 can manage other roles
-below it.
+Send messages as a discord bot.
 
 Installation
 ------------
@@ -20,37 +10,14 @@ This blindly assumes that you already have Go installed.
 
 Specify your discord bot token:
 
-    echo "YOUR-DISCORD-BOT-TOKEN" > .R2TOK
+    echo "YOUR-DISCORD-BOT-TOKEN" > .TOKEN
 
 There is no support for OTP Tokens at the moment.
 
 You can go to https://discord.com/developers/applications in
 order to create a new discord application (bot).
 
-Specify your discord bot/app id:
-
-    echo "YOUR-DISCORD-APP-ID" > .R2AID
-
-Specify your development server ID (optional):
-
-    echo "YOUR-GUILD-SERVER-ID" > .R2SRV
-
 After completing the above instructions, you can run the bot via
 a shell script:
 
-    ./rrolls
-
-Database
---------
-
-SQLite3 is the only great candidate option for an SQL database.
-
-How to wipe the data/db.json data? just empty the file:
-
-    echo -n > data/db.json
-
-TODOs
------
-
-- Threading
-- Maybe use SQLite3
+    ./dcmsg

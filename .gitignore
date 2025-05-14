@@ -1,14 +1,4 @@
 *.exe
-R2
-!cmd/R2
 
-data/
-
-# Discord Application ID
-.R2AID
-
-# Discord Token
-.R2TOK
-
-# Development Guild (Server) ID
-.R2SRV
+.TOKEN
+.CHANNEL

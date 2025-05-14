@@ -1,0 +1,5 @@
+#!/bin/sh
+
+TOKEN=$(cat .TOKEN) \
+CHANNEL=$(cat .CHANNEL) \
+    go run cmd/dcmsg/dcmsg.go
